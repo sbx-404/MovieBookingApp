@@ -1,0 +1,45 @@
+﻿@model MovieReviewApp.Models.MovieTrailerViewModel
+
+@{
+    ViewBag.Title = "Movies Trailer";
+}
+
+<h2 style="font-weight:bold; padding-bottom:1rem;">@Model.movie.Title.ToUpper()</h2>
+
+<div class="card mb-3 ">
+    <iframe style="width:auto; height: 33rem;" class="rounded"
+            src="https://www.youtube.com/embed/@Model.VideoKey"
+            frameborder="0" allowfullscreen>
+    </iframe>
+    <div class="card-body">
+
+        <div style="display:flex; ">
+            <h5 class="card-title" style="font-weight:bolder;  padding:0 0.5rem 0 0;">Title: </h5>
+        <span>@Model.movie.Title</span>
+        </div>
+
+        <div style="display:flex;">
+            <p class="card-text" style="font-weight:bolder;  padding:0 0.5rem 0 0;">Length: </p>
+            <span>@Model.movie.Runtime Min</span>
+        </div>
+
+    <div style="display:flex;">
+        <p class="card-text" style="font-weight:bolder;  padding:0 0.5rem 0 0;">Release Date: </p>
+        <span>@Model.movie.Release_date</span>
+    </div>
+
+
+        <div style="display:flex;">
+            <p class="card-text" style="font-weight:bolder;  padding:0 0.5rem 0 0;">Overview: </p>
+            <span>@Model.movie.Overview</span>
+        </div>
+
+        <div><p><span style="font-weight:bolder;">Genres: </span> @string.Join(", ", @Model.movie.Genres.Select(g => g.Name))</p></div>
+        
+    </div>
+</div>
+
+
+
+
+

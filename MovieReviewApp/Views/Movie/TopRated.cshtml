@@ -1,0 +1,24 @@
+﻿@model List<MovieReviewApp.Models.Movie>
+
+@{
+    ViewBag.Title = "Top Rated Movies";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div class="row">
+    @foreach (var movie in Model)
+    {
+        <div class="col-md-3" style="padding:1rem;">
+            <div class="card">
+                <img src="https://image.tmdb.org/t/p/w500/@movie.Poster_path" class="card-img-top" alt="@movie.Title">
+                <div class="card-body">
+                    <h5 class="card-title">@movie.Title</h5>
+                    <p class="card-text">Rating <i class="bi bi-star text-warning" style=""></i> @movie.Vote_average.ToString("0.0")</p>
+                </div>
+                <a asp-controller="Movie" asp-action="MovieTrailer" asp-route-id="@movie.Id" type="button" class="btn btn-primary">Watch Trailer </a>
+            </div>
+        </div>
+    }
+</div>
+
