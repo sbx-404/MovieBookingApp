@@ -12,8 +12,8 @@ using MovieReviewApp.Data;
 namespace MovieReviewApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250318210316_excludeGenres")]
-    partial class excludeGenres
+    [Migration("20250319121440_initialCall")]
+    partial class initialCall
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -269,26 +269,6 @@ namespace MovieReviewApp.Migrations
                     b.HasIndex("MovieId");
 
                     b.ToTable("bookingTickets");
-                });
-
-            modelBuilder.Entity("MovieReviewApp.Models.Genre", b =>
-                {
-                    b.Property<int>("databaseId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("databaseId"));
-
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("databaseId");
-
-                    b.ToTable("Genres");
                 });
 
             modelBuilder.Entity("MovieReviewApp.Models.Movie", b =>

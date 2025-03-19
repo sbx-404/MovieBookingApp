@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 
@@ -11,7 +12,8 @@ namespace MovieReviewApp.Models
         public int DatabaseId { get; set; }
 
 
-        public int Id { get; set; }
+        [JsonProperty("Id")]
+        public int Ids { get; set; }
         public string Title { get; set; }
         public string Overview { get; set; }
         public string Poster_path { get; set; }

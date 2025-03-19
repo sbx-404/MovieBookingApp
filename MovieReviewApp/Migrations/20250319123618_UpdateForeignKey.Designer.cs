@@ -12,8 +12,8 @@ using MovieReviewApp.Data;
 namespace MovieReviewApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250318190908_Initialtable")]
-    partial class Initialtable
+    [Migration("20250319123618_UpdateForeignKey")]
+    partial class UpdateForeignKey
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -271,31 +271,6 @@ namespace MovieReviewApp.Migrations
                     b.ToTable("bookingTickets");
                 });
 
-            modelBuilder.Entity("MovieReviewApp.Models.Genre", b =>
-                {
-                    b.Property<int>("databaseId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("databaseId"));
-
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("MovieDatabaseId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("databaseId");
-
-                    b.HasIndex("MovieDatabaseId");
-
-                    b.ToTable("Genres");
-                });
-
             modelBuilder.Entity("MovieReviewApp.Models.Movie", b =>
                 {
                     b.Property<int>("DatabaseId")
@@ -304,29 +279,29 @@ namespace MovieReviewApp.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DatabaseId"));
 
-                    b.Property<int>("Id")
+                    b.Property<int>("Ids")
                         .HasColumnType("int");
 
                     b.Property<string>("Overview")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Poster_path")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Release_date")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Runtime")
+                        .HasColumnType("int");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("poster_path")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("release_date")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("runtime")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("vote_average")
+                    b.Property<decimal>("Vote_average")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("DatabaseId");
@@ -421,18 +396,9 @@ namespace MovieReviewApp.Migrations
                     b.Navigation("movieData");
                 });
 
-            modelBuilder.Entity("MovieReviewApp.Models.Genre", b =>
-                {
-                    b.HasOne("MovieReviewApp.Models.Movie", null)
-                        .WithMany("genres")
-                        .HasForeignKey("MovieDatabaseId");
-                });
-
             modelBuilder.Entity("MovieReviewApp.Models.Movie", b =>
                 {
                     b.Navigation("BookingTickets");
-
-                    b.Navigation("genres");
                 });
 #pragma warning restore 612, 618
         }

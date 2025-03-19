@@ -16,7 +16,7 @@
             <!-- Right Section: Booking Form -->
             <div class="col-md-7 m-auto">
 
-                <form asp-action="SelectSeats" asp-route-movieId="@Model.movieData.Id" method="post">
+                <form asp-action="SelectSeats" asp-route-movieId="@Model.movieData.Ids" method="post">
                     <div class="mb-3">
                         <label asp-for="Name" class="form-label">Name</label>
                         <input type="text" asp-for="Name" class="form-control" placeholder="Enter your name" required>
@@ -43,7 +43,7 @@
                         <input type="date" asp-for="BookingDate" class="form-control" value="" required>
                     </div>
 
-                    <input type="hidden" value="@Model.movieData.Id" />
+                    <input type="hidden" value="@Model.movieData.Ids" />
 
                     <div class="text-center">
                         <button type="submit" class="btn btn-warning btn-lg">

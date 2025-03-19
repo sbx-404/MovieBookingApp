@@ -11,7 +11,7 @@ namespace MovieReviewApp.Models
         public int Id { get; set; }
 
         [Required]
-        [ForeignKey("Movie")]
+        [ForeignKey(nameof(Movie))]
         public int MovieId { get; set; }
 
         // Navigation property for EF Core

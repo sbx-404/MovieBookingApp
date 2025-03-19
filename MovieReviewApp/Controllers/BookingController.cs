@@ -20,20 +20,20 @@ namespace MovieReviewApp.Controllers
 
         public async Task<IActionResult> Create(int Id)
         {
-            // ✅ Check if there was an unbooked movie from a previous session
-            if (TempData["MovieId"] != null)
-            {
-                int oldMovieId = (int)TempData["MovieId"];
+            // Check if there was an unbooked movie from a previous session
+            //if (TempData["MovieId"] != null)
+            //{
+            //    int oldMovieId = (int)TempData["MovieId"];
 
-                // ✅ Delete the old movie since no booking was made
-                var oldMovie = await _movieRepository.GetById(oldMovieId);
-                if (oldMovie != null)
-                {
-                    await _movieRepository.DeleteById(oldMovieId);
-                }
+            //    // Delete the old movie since no booking was made
+            //    var oldMovie = await _movieRepository.GetById(oldMovieId);
+            //    if (oldMovie != null)
+            //    {
+            //        await _movieRepository.DeleteById(oldMovieId);
+            //    }
 
-                TempData.Remove("MovieId"); // ✅ Clear tracking
-            }
+            //    TempData.Remove("MovieId"); // Clear tracking
+            //}
 
             var MovieURL = $"https://api.themoviedb.org/3/movie/{Id}?api_key=039f54da1f3f70338722c1b60864daaf";
 
@@ -43,8 +43,8 @@ namespace MovieReviewApp.Controllers
                 return NotFound("Movie not found");
             }
 
-            await _movieRepository.Add(movieDatas);
-            TempData["MovieId"] = movieDatas.DatabaseId;  // ✅ Track new movie
+            //await _movieRepository.Add(movieDatas);
+            //TempData["MovieId"] = movieDatas.DatabaseId;  // Track new movie
 
             var booking = new BookingTicket
             {
@@ -67,12 +67,13 @@ namespace MovieReviewApp.Controllers
                 return NotFound("Movie not found");
             }
 
+            await _movieRepository.Add(movieDatas);
 
             var bookingData = new BookingTicket
             {
                 Name = booking.Name,
                 Id = booking.Id,
-                MovieId = movieDatas.Id,
+                MovieId = movieDatas.Ids,
                 movieData = movieDatas,
                 Price = booking.Price,
                 PhoneNumber = booking.PhoneNumber,

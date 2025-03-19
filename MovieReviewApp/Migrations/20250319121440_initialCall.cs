@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace MovieReviewApp.Migrations
 {
     /// <inheritdoc />
-    public partial class Initialtable : Migration
+    public partial class initialCall : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -65,10 +65,10 @@ namespace MovieReviewApp.Migrations
                     Id = table.Column<int>(type: "int", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Overview = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    poster_path = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    vote_average = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    release_date = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    runtime = table.Column<int>(type: "int", nullable: false)
+                    Poster_path = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Vote_average = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Release_date = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Runtime = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -206,26 +206,6 @@ namespace MovieReviewApp.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "Genres",
-                columns: table => new
-                {
-                    databaseId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Id = table.Column<int>(type: "int", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    MovieDatabaseId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Genres", x => x.databaseId);
-                    table.ForeignKey(
-                        name: "FK_Genres_Movies_MovieDatabaseId",
-                        column: x => x.MovieDatabaseId,
-                        principalTable: "Movies",
-                        principalColumn: "DatabaseId");
-                });
-
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -269,11 +249,6 @@ namespace MovieReviewApp.Migrations
                 name: "IX_bookingTickets_MovieId",
                 table: "bookingTickets",
                 column: "MovieId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Genres_MovieDatabaseId",
-                table: "Genres",
-                column: "MovieDatabaseId");
         }
 
         /// <inheritdoc />
@@ -296,9 +271,6 @@ namespace MovieReviewApp.Migrations
 
             migrationBuilder.DropTable(
                 name: "bookingTickets");
-
-            migrationBuilder.DropTable(
-                name: "Genres");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
