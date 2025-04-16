@@ -5,49 +5,62 @@
         <h2 class="text-center mb-4">Movie Booking</h2>
 
         <div class="row ">
-            <!-- Left Section: Movie Poster -->
             <div class="col-md-5 text-center">
-                @* <h1>@Model.movieData.Id</h1> *@
                 <h3>@Model.movieData.Title</h3>
                 <img src="https://image.tmdb.org/t/p/w300/@Model.movieData.Poster_path"
                      alt="@Model.movieData.Title" class="img-fluid rounded shadow-lg">
             </div>
 
-            <!-- Right Section: Booking Form -->
             <div class="col-md-7 m-auto">
-
-                <form asp-action="SelectSeats" asp-route-movieId="@Model.movieData.Ids" method="post">
+                <form asp-action="ConfirmBooking" method="post" id="bookingForm">
                     <div class="mb-3">
                         <label asp-for="Name" class="form-label">Name</label>
-                        <input type="text" asp-for="Name" class="form-control" placeholder="Enter your name" required>
+                        <input type="text" asp-for="Name" class="form-control" placeholder="Enter your name" required />
                     </div>
 
                     <div class="mb-3">
                         <label asp-for="Price" class="form-label">Amount (₹)</label>
-                        <input type="number" asp-for="Price" class="form-control" value="230" readonly>
+                        <input type="number" asp-for="Price" class="form-control" value="230" readonly />
                     </div>
 
                     <div class="mb-3">
                         <label asp-for="PhoneNumber" class="form-label">Phone Number</label>
-                        <input type="text" asp-for="PhoneNumber" class="form-control" placeholder="Enter phone number" required>
+                        <input type="text" asp-for="PhoneNumber" class="form-control" placeholder="Enter phone number" required />
                     </div>
 
                     <div class="mb-3">
                         <label asp-for="NumberOfSeats" class="form-label">Choose seats</label>
-                        <input type="number" asp-for="NumberOfSeats" class="form-control" value="" required>
+                        <input type="number" asp-for="NumberOfSeats" class="form-control" required />
                     </div>
-
 
                     <div class="mb-3">
                         <label asp-for="BookingDate" class="form-label">Date</label>
-                        <input type="date" asp-for="BookingDate" class="form-control" value="" required>
+                        <input type="date" asp-for="BookingDate" class="form-control" value="@DateTime.Today" required min="@DateTime.Now.ToString("yyyy-MM-dd")" />
                     </div>
 
-                    <input type="hidden" value="@Model.movieData.Ids" />
+                    <input type="hidden" asp-for="SelectedSeats" id="selectedSeats" />
+                    <input type="hidden" name="MovieId" value="@Model.MovieId" />
+
+                    <div id="seat-container">
+                        <div id="screen">Cinema Screen</div>
+                        <div id="seats">
+                            @for (char row = 'A'; row <= 'L'; row++)
+                            {
+                                <div class="seat-row">
+                                    @for (int col = 1; col <= 18; col++)
+                                    {
+                                        <div class="seat" data-seat="@($"{row}{col}")"></div>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <p>Selected Seats: <span id="selected-seats"></span></p>
 
                     <div class="text-center">
-                        <button type="submit" class="btn btn-warning btn-lg">
-                            <i class="bi bi-check-circle"></i> Select Seats
+                        <button type="button" id="submitbtn" class="btn btn-warning btn-lg">
+                            <i class="bi bi-check-circle"></i> Confirm Booking
                         </button>
                     </div>
                 </form>
@@ -56,6 +69,175 @@
     </div>
 </div>
 
-<!-- Include Bootstrap CSS -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+@section Scripts {
+     <script src="https://checkout.razorpay.com/v1/checkout.js"></script> 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+    <script>
+        $(document).ready(function () {
+            let selectedSeat = [];
+
+            $('.seat').click(function () {
+                let seat = $(this).data("seat");
+
+                if ($(this).hasClass("reserved")) {
+                    alert("This seat is already booked.");
+                    return;
+                }
+
+                $(this).toggleClass("selected");
+
+                if ($(this).hasClass("selected")) {
+                    selectedSeat.push(seat);
+                } else {
+                    selectedSeat = selectedSeat.filter(s => s !== seat);
+                }
+
+                $("#selectedSeats").val(selectedSeat.join(","));
+                $("#selected-seats").text(selectedSeat.join(", "));
+
+
+
+            });
+
+            $('#submitbtn').click(function (e) {
+                e.preventDefault();
+
+
+            // if (!$('#bookingForm').valid()) {
+            //     return;    // prevents submission if validation fails
+            // }
+
+                let name = $("input[name='Name']").val().trim();
+        let phone = $("input[name='PhoneNumber']").val().trim();
+        let date = $("input[name='BookingDate']").val().trim();
+        let expectedSeats = parseInt($('input[name="NumberOfSeats"]').val());
+        let selectedSeats = $("#selectedSeats").val().split(",").filter(s => s !== "");
+
+        if (!name) {
+            alert("Please enter your name.");
+            return;
+        }
+
+        if (!phone || !/^[6-9]\d{9}$/.test(phone)) {
+            alert("Please enter a valid phone number.");
+            return;
+        }
+
+        if (!date) {
+            alert("Please select a booking date.");
+            return;
+        }
+
+               if (expectedSeats <= 0) {
+            alert("Please select at least 1 seat.");
+            return;
+        }
+
+        if (selectedSeats.length !== expectedSeats) {
+            alert(`Please select exactly ${expectedSeats} seat(s)!`);
+            return;
+        }
+
+
+
+                     if (selectedSeat.length >= expectedSeats) {
+            $('.seat:not(.selected):not(.reserved)').addClass("disabled");
+        } else {
+            $('.seat.disabled').removeClass("disabled");
+        }
+
+
+                // let expectedSeats = parseInt($('input[name="NumberOfSeats"]').val());
+                // let selectedSeats = $("#selectedSeats").val();
+
+                // if (selectedSeats.split(",").length !== expectedSeats) {
+                //     alert(`Please select exactly ${expectedSeats} seat(s)!`);
+                //     return;
+                // }
+        let bookingData = {
+               Name: name,
+               Price: $("input[name='Price']").val(),
+               PhoneNumber: phone,
+               NumberOfSeats: expectedSeats,
+               BookingDate: date,
+               SelectedSeats: selectedSeats.join(","),
+               MovieId: $("input[name='MovieId']").val()
+           };
+
+                $.post('/Booking/CreateRazorpayOrder', bookingData, function (response) {
+                    var options = {
+                        "key": response.key,
+                        "amount": response.amount,
+                        "currency": "INR",
+                        "name": "Movie Ticket Booking",
+                        "description": "Payment for your movie seats.",
+                        "order_id": response.orderId,
+                        "handler": function (paymentResponse) {
+                            $('<input>').attr({
+                                type: 'hidden',
+                                name: 'RazorpayPaymentId',
+                                value: paymentResponse.razorpay_payment_id
+                            }).appendTo('#bookingForm');
+
+                            $('<input>').attr({
+                                type: 'hidden',
+                                name: 'RazorpayOrderId',
+                                value: paymentResponse.razorpay_order_id
+                            }).appendTo('#bookingForm');
+
+                            $('#bookingForm').submit();  // Submits to ConfirmBooking after payment success
+                        }
+                    };
+
+                    var rzp = new Razorpay(options);
+                    rzp.open();
+                }).fail(function (xhr) {
+                    alert("Error creating Razorpay order: " + xhr.responseText);
+                });
+            });
+        });
+    </script>
+}
+
+<style>
+    #seat-container {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    #screen {
+        background: gray;
+        color: white;
+        padding: 10px;
+        margin-bottom: 20px;
+        font-weight: bold;
+    }
+
+    .seat-row {
+        display: flex;
+        justify-content: center;
+    }
+
+    .seat {
+        width: 30px;
+        height: 30px;
+        margin: 5px;
+        background: lightgray;
+        text-align: center;
+        line-height: 30px;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+
+        .seat.selected {
+            background: green;
+            color: white;
+        }
+
+        .seat.reserved {
+            background: red;
+            color: white;
+            cursor: not-allowed;
+        }
+</style>

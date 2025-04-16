@@ -16,7 +16,6 @@ namespace MovieReviewApp.IRepository.Repository
 
         public async Task<T> Add(T Entity)
         {
-
             var data = _DbSet.Add(Entity);
             await _db.SaveChangesAsync();
             return data.Entity;

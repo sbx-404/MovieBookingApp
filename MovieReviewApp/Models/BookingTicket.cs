@@ -12,29 +12,38 @@ namespace MovieReviewApp.Models
 
         [Required]
         [ForeignKey(nameof(Movie))]
-        public int MovieId { get; set; }
+        public int MovieId { get; set; }    
 
         // Navigation property for EF Core
         public virtual Movie movieData { get; set; }
 
-        [Required]
-        public string Name { get; set; } = "Guest";
+        [Required(ErrorMessage = "Name is required.")]
+        public string Name { get; set; } 
 
-        [Required]
-        public decimal Price { get; set; } = 0;
+        [Required(ErrorMessage = "Price is required.")]
+        public decimal Price { get; set; } 
 
-        [Required]
-        [RegularExpression(@"^\d{10}$", ErrorMessage = "Invalid Phone Number")]
-        public string PhoneNumber { get; set; } = "0000000000";
+        [Required(ErrorMessage = "Phone number is required.")]
+        public string PhoneNumber { get; set; } 
 
-        [Required]
+        [Required(ErrorMessage = "Booking date is required.")]
         [DataType(DataType.Date)]
-        public DateTime BookingDate { get; set; }
+        public DateTime BookingDate { get; set; } 
 
-        [Required]
+        
+        [Required(ErrorMessage = "Number of seats is required.")]
         public int NumberOfSeats { get; set; }
 
-        [Required]
-        public string SelectedSeats { get; set; } = "";
+
+        [Required(ErrorMessage = "Please select at least one seat.")]
+        public string SelectedSeats { get; set; } 
+
+
+        public string RazorpayPaymentId { get; set; }
+        public string RazorpayOrderId { get; set; }
+        //public string RazorpaySignature { get; set; }
+        //public string PaymentStatus { get; set; }
+
+
     }
 }

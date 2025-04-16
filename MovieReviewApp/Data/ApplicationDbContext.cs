@@ -18,6 +18,15 @@ namespace MovieReviewApp.Data
         public DbSet<Movie> Movies { get; set; }
         //public DbSet<Genre> Genres { get; set; }
         //public DbSet<LoginModel> Login { get; set; }
+
+        //protected override void OnModelCreating(ModelBuilder modelBuilder)
+        //{
+        //    modelBuilder.Entity<BookingTicket>()
+        //        .HasOne(bt => bt.movieData)
+        //        .WithMany(m => m.BookingTickets)
+        //        .HasForeignKey(bt => bt.MovieId) // ✅ Ensure it references Movie.DatabaseId
+        //        .OnDelete(DeleteBehavior.Cascade);
+        //}
     }
 
 }

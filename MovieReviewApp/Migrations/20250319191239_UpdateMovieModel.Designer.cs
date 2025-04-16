@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MovieReviewApp.Data;
 
@@ -11,9 +12,11 @@ using MovieReviewApp.Data;
 namespace MovieReviewApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250319191239_UpdateMovieModel")]
+    partial class UpdateMovieModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -257,14 +260,6 @@ namespace MovieReviewApp.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("RazorpayOrderId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RazorpayPaymentId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("SelectedSeats")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -393,17 +388,12 @@ namespace MovieReviewApp.Migrations
             modelBuilder.Entity("MovieReviewApp.Models.BookingTicket", b =>
                 {
                     b.HasOne("MovieReviewApp.Models.Movie", "movieData")
-                        .WithMany("BookingTickets")
+                        .WithMany()
                         .HasForeignKey("MovieId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("movieData");
-                });
-
-            modelBuilder.Entity("MovieReviewApp.Models.Movie", b =>
-                {
-                    b.Navigation("BookingTickets");
                 });
 #pragma warning restore 612, 618
         }
