@@ -97,16 +97,11 @@
                 $("#selected-seats").text(selectedSeat.join(", "));
 
 
-
             });
 
             $('#submitbtn').click(function (e) {
                 e.preventDefault();
 
-
-            // if (!$('#bookingForm').valid()) {
-            //     return;    // prevents submission if validation fails
-            // }
 
                 let name = $("input[name='Name']").val().trim();
         let phone = $("input[name='PhoneNumber']").val().trim();
@@ -138,23 +133,7 @@
             alert(`Please select exactly ${expectedSeats} seat(s)!`);
             return;
         }
-
-
-
-                     if (selectedSeat.length >= expectedSeats) {
-            $('.seat:not(.selected):not(.reserved)').addClass("disabled");
-        } else {
-            $('.seat.disabled').removeClass("disabled");
-        }
-
-
-                // let expectedSeats = parseInt($('input[name="NumberOfSeats"]').val());
-                // let selectedSeats = $("#selectedSeats").val();
-
-                // if (selectedSeats.split(",").length !== expectedSeats) {
-                //     alert(`Please select exactly ${expectedSeats} seat(s)!`);
-                //     return;
-                // }
+                        
         let bookingData = {
                Name: name,
                Price: $("input[name='Price']").val(),

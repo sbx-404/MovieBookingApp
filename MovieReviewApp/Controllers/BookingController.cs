@@ -9,11 +9,15 @@ using Razorpay.Api;
     {
     public class BookingController : Controller
     {
+        private readonly string _razorpayKey;
+        private readonly string _razorpaySecret;
         private readonly apiService _apiService;
         private readonly IRepository<BookingTicket> _bookingTicketRepository;
         private readonly IRepository<Movie> _movieRepository;
-        public BookingController(apiService apiService, IRepository<BookingTicket> bookingTicketRepository, IRepository<Movie> movieRepository)
+        public BookingController(IConfiguration configuration, apiService apiService, IRepository<BookingTicket> bookingTicketRepository, IRepository<Movie> movieRepository)
         {
+            _razorpayKey = configuration["Razorpay:Key"];
+            _razorpaySecret = configuration["Razorpay:Secret"];
             _apiService = apiService;
             _bookingTicketRepository = bookingTicketRepository;
             _movieRepository = movieRepository;
@@ -30,24 +34,19 @@ using Razorpay.Api;
             }
 
 
-            var existingMovie = await _movieRepository.GetAll();
-            var movieInDb = existingMovie.FirstOrDefault(m => m.Ids == movieDatas.Ids);
-
-            //if (movieInDb == null)
-            //{
-            //    await _movieRepository.Add(movieDatas); // ✅ Save only if not exists
-            //}
+            var existingMovie = await _movieRepository.GetAll();     // get all movies
+            var movieInDb = existingMovie.FirstOrDefault(m => m.Ids == movieDatas.Ids);    // check the movie based on Ids is it present in database or not. 
 
             if (movieInDb == null)
             {
-                await _movieRepository.Add(movieDatas); // ✅ Save movie before assigning MovieId
+                await _movieRepository.Add(movieDatas); //  Save movie before assigning MovieId
                 movieInDb = movieDatas; // point to the freshly saved movie
             }
 
             var booking = new BookingTicket
             {
                 movieData = movieInDb,
-                MovieId = movieInDb.DatabaseId // ✅ Correctly link movie
+                MovieId = movieInDb.DatabaseId // Correctly link movie
             };
 
             return View(booking);
@@ -62,7 +61,7 @@ using Razorpay.Api;
             if (booking.PhoneNumber == null && string.IsNullOrEmpty(booking.SelectedSeats))
                 return BadRequest("Invalid booking data!");
 
-            RazorpayClient client = new RazorpayClient("rzp_test_PVyIf5WIssd0HH", "b8MDP1eI2i6SVShGcwKVPCh8");
+            RazorpayClient client = new RazorpayClient(_razorpayKey, _razorpaySecret);
 
             Dictionary<string, object> options = new Dictionary<string, object>
             {
@@ -77,7 +76,7 @@ using Razorpay.Api;
             return Json(new
             {
                 orderId = order["id"].ToString(),
-                key = "rzp_test_PVyIf5WIssd0HH",
+                key = _razorpayKey,
                 amount = booking.Price * 100,
                 name = booking.Name,
                 phone = booking.PhoneNumber,
@@ -97,7 +96,7 @@ using Razorpay.Api;
             booking.RazorpayOrderId = RazorpayOrderId;
             await _bookingTicketRepository.Add(booking);
 
-            return RedirectToAction("ThankYou");
+            return RedirectToAction("BookingSuccess");
         }
 
 

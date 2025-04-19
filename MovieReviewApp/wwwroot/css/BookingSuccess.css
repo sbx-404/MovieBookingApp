@@ -1,0 +1,102 @@
+﻿/*body {
+    background: #f0f8ff;
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #333;
+}*/
+
+.thankyou-card {
+    background: white;
+    padding: 40px 30px;
+    border-radius: 20px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    text-align: center;
+    animation: popUp 0.5s ease forwards;
+}
+
+    .thankyou-card h1 {
+        font-size: 2.5rem;
+        color: #4CAF50;
+        margin-bottom: 10px;
+    }
+
+    .thankyou-card p {
+        font-size: 1.1rem;
+        margin: 10px 0 20px;
+    }
+
+.checkmark {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    background: #4CAF50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: bounce 0.6s ease forwards;
+}
+
+    .checkmark svg {
+        width: 40px;
+        height: 40px;
+        stroke: white;
+        stroke-width: 3;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        fill: none;
+        stroke-dasharray: 50;
+        stroke-dashoffset: 50;
+        animation: drawCheck 0.8s ease forwards 0.3s;
+    }
+
+.thankyou-card a {
+    display: inline-block;
+    margin-top: 20px;
+    text-decoration: none;
+    background: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 30px;
+    transition: background 0.3s ease;
+}
+
+    .thankyou-card a:hover {
+        background: #45a049;
+    }
+
+@keyframes popUp {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes bounce {
+    0% {
+        transform: scale(0.5);
+    }
+
+    80% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes drawCheck {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
