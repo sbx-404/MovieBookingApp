@@ -13,10 +13,12 @@ namespace MovieReviewApp.Controllers
     public class MovieController : Controller
     {
         private readonly apiService _apiService;
+        private readonly string _apiKey;
 
-        public MovieController(apiService apiService)
+        public MovieController(apiService apiService,IConfiguration configuration)
         {
             _apiService = apiService;
+            _apiKey = configuration["API_KEY:Key"];
         }
 
 
@@ -31,7 +33,7 @@ namespace MovieReviewApp.Controllers
                 return View(new Pagination<Movie>(new List<Movie>(), 0, page, 1));    // prevent from the null exception error that's why give empty list of Movie 
             }
 
-            var MovieUrl = $"https://api.themoviedb.org/3/search/movie?api_key=039f54da1f3f70338722c1b60864daaf&query={query}&page={page}";
+            var MovieUrl = $"https://api.themoviedb.org/3/search/movie?api_key={_apiKey}&query={query}&page={page}";
 
             // make api call after decenteralised in Movie model
             MovieResponse movieData = await _apiService.MovieApi<MovieResponse>(MovieUrl);
@@ -55,7 +57,7 @@ namespace MovieReviewApp.Controllers
         public async Task<IActionResult> PopularMovies(int page = 1)
         {
             int pageSize = 23;
-            var url = $"https://api.themoviedb.org/3/movie/popular?api_key=039f54da1f3f70338722c1b60864daaf&page={page}";
+            var url = $"https://api.themoviedb.org/3/movie/popular?api_key={_apiKey}&page={page}";
 
             MovieResponse data = await _apiService.MovieApi<MovieResponse>(url);
 
@@ -81,7 +83,7 @@ namespace MovieReviewApp.Controllers
         [Authorize(Roles = Roles.Role_User)]
         public async Task<IActionResult> TopRated()
         {
-            var url = "https://api.themoviedb.org/3/movie/top_rated?api_key=039f54da1f3f70338722c1b60864daaf";
+            var url = "https://api.themoviedb.org/3/movie/top_rated?api_key={_apiKey}";
             MovieResponse data = await _apiService.MovieApi<MovieResponse>(url); 
             return View(data?.Results ?? new List<Movie>());                     // if left side null then right will return
         }
@@ -94,11 +96,11 @@ namespace MovieReviewApp.Controllers
                 return NotFound();
             }
 
-            var Movieurl = $"https://api.themoviedb.org/3/movie/{id}?api_key=039f54da1f3f70338722c1b60864daaf";
+            var Movieurl = $"https://api.themoviedb.org/3/movie/{id}?api_key={_apiKey}";
 
             Movie MovieData = await _apiService.MovieApi<Movie>(Movieurl);
 
-            var videoUrl = "https://api.themoviedb.org/3/movie/"+ id + "/videos?api_key=039f54da1f3f70338722c1b60864daaf";
+            var videoUrl = "https://api.themoviedb.org/3/movie/"+ id + "/videos?api_key={_apiKey}";
             MovieVideoResponse VideoData = await _apiService.MovieApi<MovieVideoResponse>(videoUrl);
     
             var trailerKey = VideoData?.Results?.FirstOrDefault(u => u.site == "YouTube" && u.type == "Trailer")?.Key;

@@ -144,7 +144,7 @@
                MovieId: $("input[name='MovieId']").val()
            };
 
-                $.post('/Booking/CreateRazorpayOrder', bookingData, function (response) {
+                $.post('/Booking/CreateRazorpayOrder', bookingData, function (response) {              //This sends booking info to your controller.
                     var options = {
                         "key": response.key,
                         "amount": response.amount,
@@ -169,8 +169,8 @@
                         }
                     };
 
-                    var rzp = new Razorpay(options);
-                    rzp.open();
+                    var rzp = new Razorpay(options);       // get all info use 
+                    rzp.open();               // this is open the razorpay payment popup
                 }).fail(function (xhr) {
                     alert("Error creating Razorpay order: " + xhr.responseText);
                 });

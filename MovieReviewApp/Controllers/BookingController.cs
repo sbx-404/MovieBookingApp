@@ -11,6 +11,7 @@ using Razorpay.Api;
     {
         private readonly string _razorpayKey;
         private readonly string _razorpaySecret;
+        private readonly string _apiKey;
         private readonly apiService _apiService;
         private readonly IRepository<BookingTicket> _bookingTicketRepository;
         private readonly IRepository<Movie> _movieRepository;
@@ -18,6 +19,7 @@ using Razorpay.Api;
         {
             _razorpayKey = configuration["Razorpay:Key"];
             _razorpaySecret = configuration["Razorpay:Secret"];
+            _apiKey = configuration["API_KEY:Key"];
             _apiService = apiService;
             _bookingTicketRepository = bookingTicketRepository;
             _movieRepository = movieRepository;
@@ -25,7 +27,7 @@ using Razorpay.Api;
 
         public async Task<IActionResult> Create(int Id)
         {
-            var MovieURL = $"https://api.themoviedb.org/3/movie/{Id}?api_key=039f54da1f3f70338722c1b60864daaf";
+            var MovieURL = $"https://api.themoviedb.org/3/movie/{Id}?api_key={_apiKey}";
 
             Movie movieDatas = await _apiService.MovieApi<Movie>(MovieURL);
             if (movieDatas == null)
