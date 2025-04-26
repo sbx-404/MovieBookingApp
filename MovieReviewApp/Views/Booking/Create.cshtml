@@ -39,7 +39,7 @@
                     </div>
 
                     <input type="hidden" asp-for="SelectedSeats" id="selectedSeats" />
-                    <input type="hidden" name="MovieId" value="@Model.MovieId" />
+                    <input type="hidden" name="MovieId" value="@Model.MovieId" id="movieID"/>
 
                     <div id="seat-container">
                         <div id="screen">Cinema Screen</div>
@@ -76,8 +76,29 @@
     <script>
         $(document).ready(function () {
             let selectedSeat = [];
+            let movieID = $("input[name='MovieId']").val();
 
-            $('.seat').click(function () {
+
+            // you can get the movieId from booking controller
+            $.get("/Booking/GetReservedSeats",{movieId: movieID},function(data){               // these data forward to booking/GetReservedSeats action method with movieId and get data from database
+                 let reservedSeats = [];
+
+                // data = ["A1,A2", "B5,B6"]
+                data.forEach(seatStr => {
+                    reservedSeats.push(...seatStr.split(',')); // flatten to ["A1", "A2", "B5", "B6"]
+                });
+
+                //  Mark each seat div as reserved
+                $('.seat').each(function () {
+                    let seat = $(this).data('seat');
+                    if (reservedSeats.includes(seat)) {
+                        $(this).addClass('reserved');
+                    }
+                });
+            });
+
+
+            $('.seat').click(function () {  
                 let seat = $(this).data("seat");
 
                 if ($(this).hasClass("reserved")) {
@@ -103,36 +124,36 @@
                 e.preventDefault();
 
 
-                let name = $("input[name='Name']").val().trim();
-        let phone = $("input[name='PhoneNumber']").val().trim();
-        let date = $("input[name='BookingDate']").val().trim();
-        let expectedSeats = parseInt($('input[name="NumberOfSeats"]').val());
-        let selectedSeats = $("#selectedSeats").val().split(",").filter(s => s !== "");
+            let name = $("input[name='Name']").val().trim();
+            let phone = $("input[name='PhoneNumber']").val().trim();
+            let date = $("input[name='BookingDate']").val().trim();
+            let expectedSeats = parseInt($('input[name="NumberOfSeats"]').val());
+            let selectedSeats = $("#selectedSeats").val().split(",").filter(s => s !== "");
 
-        if (!name) {
-            alert("Please enter your name.");
-            return;
-        }
+            if (!name) {
+                alert("Please enter your name.");
+                return;
+            }
 
-        if (!phone || !/^[6-9]\d{9}$/.test(phone)) {
-            alert("Please enter a valid phone number.");
-            return;
-        }
+            if (!phone || !/^[6-9]\d{9}$/.test(phone)) {
+                alert("Please enter a valid phone number.");
+                return;
+            }
 
-        if (!date) {
-            alert("Please select a booking date.");
-            return;
-        }
+            if (!date) {
+                alert("Please select a booking date.");
+                return;
+            }
 
-               if (expectedSeats <= 0) {
-            alert("Please select at least 1 seat.");
-            return;
-        }
+                    if (expectedSeats <= 0) {
+                alert("Please select at least 1 seat.");
+                return;
+            }
 
-        if (selectedSeats.length !== expectedSeats) {
-            alert(`Please select exactly ${expectedSeats} seat(s)!`);
-            return;
-        }
+            if (selectedSeats.length !== expectedSeats) {
+                alert(`Please select exactly ${expectedSeats} seat(s)!`);
+                return;
+            }
                         
         let bookingData = {
                Name: name,

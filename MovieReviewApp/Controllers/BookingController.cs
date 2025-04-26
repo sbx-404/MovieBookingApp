@@ -1,5 +1,6 @@
 ﻿    using Microsoft.AspNetCore.Mvc;
-    using MovieReviewApp.Data;
+using Microsoft.EntityFrameworkCore;
+using MovieReviewApp.Data;
     using MovieReviewApp.IRepository;
     using MovieReviewApp.Models;
     using MovieReviewApp.Services;
@@ -15,7 +16,8 @@ using Razorpay.Api;
         private readonly apiService _apiService;
         private readonly IRepository<BookingTicket> _bookingTicketRepository;
         private readonly IRepository<Movie> _movieRepository;
-        public BookingController(IConfiguration configuration, apiService apiService, IRepository<BookingTicket> bookingTicketRepository, IRepository<Movie> movieRepository)
+        private readonly ApplicationDbContext _applicationDbContext;
+        public BookingController(ApplicationDbContext applicationDbContext, IConfiguration configuration, apiService apiService, IRepository<BookingTicket> bookingTicketRepository, IRepository<Movie> movieRepository)
         {
             _razorpayKey = configuration["Razorpay:Key"];
             _razorpaySecret = configuration["Razorpay:Secret"];
@@ -23,7 +25,21 @@ using Razorpay.Api;
             _apiService = apiService;
             _bookingTicketRepository = bookingTicketRepository;
             _movieRepository = movieRepository;
+            _applicationDbContext = applicationDbContext;
         }
+
+
+        public async Task<IActionResult> GetReservedSeats(int movieId)  
+        {
+            var seats = await _applicationDbContext.bookingTickets
+                .Where(b => b.MovieId == movieId)
+                .Select(b => b.SelectedSeats)
+                .ToListAsync();
+
+            return Json(seats);
+        }
+
+
 
         public async Task<IActionResult> Create(int Id)
         {
