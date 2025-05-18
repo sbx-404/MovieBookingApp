@@ -3,28 +3,29 @@
 A full-stack ASP.NET MVC web application that allows users to browse movies, select seats in a real-time seating chart, and book tickets with integrated Razorpay payments.
 🚀 Features
 
-    🔍 Browse movies using the TMDb API
+🔍 Browse movies using the TMDb API
 
-    🪑 Interactive seat selection with color-coded availability
+🪑 Interactive seat selection with color-coded availability
 
-    💳 Secure Razorpay payment integration
+💳 Secure Razorpay payment integration
 
-    🔐 User registration, login, and authentication
+🔐 User registration, login, and authentication
 
-    📜 View personal booking history
+📜 View personal booking history
 
-    🗃️ SQL Server backend with Entity Framework for data management
+🗃️ SQL Server backend with Entity Framework for data management
 
-    📱 Responsive design using Bootstrap for smooth UI on all devices
+📱 Responsive design using Bootstrap for smooth UI on all devices
+
 
 🛠️ Tech Stack
 
-    Frontend: HTML, CSS, JavaScript, Bootstrap, jQuery
+Frontend: HTML, CSS, JavaScript, Bootstrap, jQuery
 
-    Backend: ASP.NET MVC (C#), Razor views
+Backend: ASP.NET MVC (C#), Razor views
 
-    Database: SQL Server
+Database: SQL Server
 
-    APIs: TMDb API, Razorpay API
+APIs: TMDb API, Razorpay API
 
-    Authentication: ASP.NET Identity
+Authentication: ASP.NET Identity
